@@ -1,0 +1,115 @@
+	<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  </head>
+  
+  <body class= "bg-info">
+    <div class="container">
+		<div class="row">
+			<div class="col-md-6 mx-auto" >
+					   
+				<div class="col-md-12 mx-auto"> 
+					<h1 class="text-center">Expenses App</h1>
+					
+				 </div>
+
+				<div class="col-md-12 mx-auto" id="ex">
+
+						<select class="selectpicker form-control" id="Exp_type">
+								<optgroup label="Expense Type">
+									<option>Food</option>
+									<option>Goods</option>
+									<option>Services</option>
+								</optgroup>
+
+				<!--	<input type="text" class="form-control" id = "Exp_type" placeholder="Expense type">-->
+					<input type="number" class="form-control" id = "Exp_value" placeholder="Expense value">
+					<input type="text" class="form-control" id = "Exp_details" placeholder="Expense details">
+					  
+					<div class="table-responsive" id="hide_Expense">
+						<table class="table bg-light text-center">
+							<thead class="bg-info">
+								<tr>
+									<th>Expense Type</th>
+									<th>Value</th>
+									<th>Details</th>
+									<th></th>
+								</tr>	 
+							</thead>
+							<tbody></tbody>
+						</table>
+						<button class="btn btn-default btn-block" id="Clear_Expenses">Clear Expenses</button>
+					</div>
+					<br>
+					<p id ="before"></p>
+					<br>
+					<button class="btn btn-secondary btn-block btn3d" id="Expense">Record Expense</button>
+				</div>
+					 		
+				 
+			</div>
+		</div>
+		 
+		<br>
+		<div class="row">
+			<div class="col-md-6 mx-auto">
+				<div class="col-md-12 mx-auto"> 
+					<button class="btn btn-dark btn-block" id="Hide_Expenses">Show/Hide Expenses</button>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-6 mx-auto">
+				<br>
+				
+				<div class="col-md-12 mx-auto"  id = "Total">
+					<h3 class="text-center">Totals</h3>
+
+					<div class="input-group"> 
+						<span class="input-group-text">Food</span>
+						<input type="number" class="form-control" placeholder="Total Food" id="Total_F">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-text">Goods</span>
+						<input type="number" class="form-control" placeholder="Total Goods" id="Total_G">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-text">Services</span>
+						<input type="number" class="form-control" placeholder="Total Service" id= "Total_S">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-text">Grand Total</span>
+						<input type="number" class="form-control" placeholder="Grand Total" id= "Total_Grand">
+					</div>
+					 
+				</div>
+				<br>
+				<div class="col-md-12 mx-auto">
+					<button class="btn btn-dark btn-block" id="Hide_T">Show/Hide Totals</button>	
+				</div>
+			</div>
+		</div>
+		 
+		  
+	</div>
+	
+     
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="expense.js"></script>
+  </body>
+</html>
