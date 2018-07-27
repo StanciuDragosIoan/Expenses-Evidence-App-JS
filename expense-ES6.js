@@ -7,22 +7,28 @@ class Expense {
 }
 
 class UI {
+	//Add Expense
 	addExpense(expense){
 		let row = document.createElement('tr');
 		row.innerHTML = `
-	<td>${expense.type}</td>
-	<td>${expense.value}</td>
-	<td>${expense.details}</td>
-	<td><a href="#" class='delete'>X</a></td>
- `;
-	 
-	let table =  document.querySelector('.table');
-	table.appendChild(row);
+		<td>${expense.type}</td>
+		<td>${expense.value}</td>
+		<td>${expense.details}</td>
+		<td><a href="#" class='delete'>X</a></td>
+	 `;
+		 
+		let table =  document.querySelector('.table');
+		table.appendChild(row);
 		
+		document.getElementById('Exp_type').value = "";
+		document.getElementById('Exp_value').value = "";
+		document.getElementById('Exp_details').value = "";
 	}
-	
+
+	//showAlert()
 	showAlert(msg, className){
-			//create div
+		let alertDiv = document.querySelector('.alert');
+		//create div
 		const div = document.createElement('div');
 		//add className
 		div.className = `alert ${className}`;//"col-md-12 mx-auto-bg-warning";
@@ -33,346 +39,240 @@ class UI {
 		//get the element before which we'll insert div
 		const befoRe = document.querySelector('#before');
 		//insert div before befoRe in parent
-		parent.insertBefore(div, befoRe);
-		
-		//Timeout after 3 seconds
-		setTimeout(function(){
-		document.querySelector('.alert').remove();
-		}, 3000); 
+		parent.insertBefore(div, befoRe);		 
 	}
-	
-	clearFields(e){
-		document.getElementById('Exp_type').value = "";
-		document.getElementById('Exp_value').value = "";
-		document.getElementById('Exp_details').value = "";
 
-	 
+
+ 
+	clearAlert(){
+		let alertDiv = document.querySelector('.alert');
+		setTimeout(function(){
+			alertDiv.remove();
+		}, 2000);
 	}
-	
-	deleteExpense(target){
+
+	removeExpense(target){
 		if(target.className === 'delete'){
-		target.parentElement.parentElement.remove();
-		}    
+			//delete parent of the parent of the target element
+				target.parentElement.parentElement.remove();
+			}
 	}
-	
+
 	clearExpenses(){
 		const expenses  = document.querySelectorAll('.delete');
 		expenses.forEach(function(expense){
 		expense.parentElement.parentElement.remove();
 		});
+		document.getElementById('Total_F').value = 0;
+		document.getElementById('Total_G').value = 0;
+		document.getElementById('Total_S').value = 0;
+		document.getElementById('Total_Grand').value = 0;
 	}
-	
-	disableInp(){
-		document.querySelector('#Clear_Expenses').disabled = true;
-		document.querySelector('#Expense').disabled = true;
-	}
-	
-	enableInp(){
-		document.querySelector('#Clear_Expenses').disabled = false;
-		document.querySelector('#Expense').disabled = false;
-	}
+	 
 }
 
 
 class LS{
-	storeExpenses(expense){
+	//Store Expense
+	storeExpense(expense){
 		let Expenses;
 		if(localStorage.getItem('Expenses') === null){
 			Expenses = [];
 		}	else {
 			Expenses = JSON.parse(localStorage.getItem('Expenses'));
-		}
+		}	
 			Expenses.push(expense);
 			localStorage.setItem('Expenses', JSON.stringify(Expenses));
+			
+		//Total Expenses Array
+		let Total_Expenses;
+		if(localStorage.getItem('Total_Expenses') === null){
+			Total_Expenses = [];
+		}	else {
+			Total_Expenses = JSON.parse(localStorage.getItem('Total_Expenses'));
+		}	
+		Total_Expenses.push(expense.value);
+		localStorage.setItem('Total_Expenses', JSON.stringify(Total_Expenses));
 
-			let Total_Food;
-			let Total_Goods;
-			let Total_Services;
-			let Grand_Total = 0;
-
-
-
-			Expenses.forEach(function(expense){
-				Grand_Total += Number(expense.value);
-			});
-				document.getElementById('Total_Grand').value = Grand_Total;
-
-
-
+		let sumTotal_Expenses = 0;
+					for(var i =0; i<Total_Expenses.length; i++){
+						sumTotal_Expenses += Number(Total_Expenses[i]);	 
+					}
+					document.getElementById('Total_Grand').value = sumTotal_Expenses;
+			
+		//total Food  
+		let Total_Food;
+		if(localStorage.getItem('Total_Food') === null){
+			Total_Food = [];
+		} else {
+			Total_Food = JSON.parse(localStorage.getItem('Total_Food'));
+		}
 		if(expense.type === 'Food'){
-			Total_Food =[];
-
-			let Expenses = JSON.parse(localStorage.getItem('Expenses'));
-
-			Expenses.forEach(function(expense){
-					if(expense.type === 'Food'){
-						Total_Food.push(expense.value);
-						localStorage.setItem('Total_Food', JSON.stringify(Total_Food));
-
-						//console.log(Total_Expenses);
-						let sumTFood = 0;
-						for(var i =0; i<Total_Food.length; i++){
-							sumTFood += Number(Total_Food[i]);
-		 
-						}
-							document.getElementById('Total_F').value = sumTFood;
-					}	 
-			});
-
-
-		}	else if(expense.type === 'Goods'){
-			Total_Goods =[];
-
-			let Expenses = JSON.parse(localStorage.getItem('Expenses'));
-
-			Expenses.forEach(function(expense){
-					if(expense.type === 'Goods'){
-						Total_Goods.push(expense.value);
-						localStorage.setItem('Total_Goods', JSON.stringify(Total_Goods));
-
-						//console.log(Total_Expenses);
-						let sumTGoods = 0;
-						for(var i =0; i<Total_Goods.length; i++){
-							sumTGoods += Number(Total_Goods[i]);
-		 
-						}
-						document.getElementById('Total_G').value = sumTGoods;
-					}	 
-			});
-
-		} else if (expense.type === 'Services'){
-				Total_Services =[];
-				let Expenses = JSON.parse(localStorage.getItem('Expenses'));
-
-				Expenses.forEach(function(expense){
-					if(expense.type === 'Services'){
-						Total_Services.push(expense.value);
-						localStorage.setItem('Total_Services', JSON.stringify(Total_Services));
-
-						//console.log(Total_Expenses);
-						let sumTServices = 0;
-						for(var i =0; i<Total_Services.length; i++){
-							sumTServices += Number(Total_Services[i]);
-			 
-						}
-						document.getElementById('Total_S').value = sumTServices;
-					}	
-				});
+			Total_Food.push(expense.value);
+			localStorage.setItem('Total_Food', JSON.stringify(Total_Food));
 		}
+		let sumTotal_Food = 0;
+		for(var i =0; i<Total_Food.length; i++){
+			sumTotal_Food += Number(Total_Food[i]);	 
+		}
+		document.getElementById('Total_F').value = sumTotal_Food;
+
+		//total Goods  
+		let Total_Goods;
+		if(localStorage.getItem('Total_Goods') === null){
+			Total_Goods = [];
+		} else {
+			Total_Goods = JSON.parse(localStorage.getItem('Total_Goods'));
+		}
+		if(expense.type === 'Goods'){
+			Total_Goods.push(expense.value);
+			localStorage.setItem('Total_Goods', JSON.stringify(Total_Goods));
+		}
+		let sumTotal_Goods = 0;
+		for(var i =0; i<Total_Goods.length; i++){
+			sumTotal_Goods += Number(Total_Goods[i]);	 
+		}
+		document.getElementById('Total_G').value = sumTotal_Goods;
+
+		//total Services  
+		let Total_Services;
+		if(localStorage.getItem('Total_Services') === null){
+			Total_Services = [];
+		} else {
+			Total_Services = JSON.parse(localStorage.getItem('Total_Services'));
+		}
+		if(expense.type === 'Services'){
+			Total_Services.push(expense.value);
+			localStorage.setItem('Total_Services', JSON.stringify(Total_Services));
+		}
+		let sumTotal_Services = 0;
+		for(var i =0; i<Total_Services.length; i++){
+			sumTotal_Services += Number(Total_Services[i]);	 
+		}
+		document.getElementById('Total_S').value = sumTotal_Services;
 	}
-	
+
+	//delete Expense
+	deleteExpense(target, index){
+		let Expenses = JSON.parse(localStorage.getItem('Expenses'));
+		let Total_Expenses = JSON.parse(localStorage.getItem('Total_Expenses'));
+		let Total_Food = JSON.parse(localStorage.getItem('Total_Food'));
+		let Total_Goods = JSON.parse(localStorage.getItem('Total_Goods'));
+		let Total_Services = JSON.parse(localStorage.getItem('Total_Services'));
+		if(target.parentElement.previousSibling.previousSibling.previousSibling.previousSibling.previousSibling.previousSibling.innerText  === 'Food'){
+			Expenses.splice(index, 1); 
+			localStorage.setItem('Expenses', JSON.stringify(Expenses));
+			Total_Expenses.splice(index, 1);
+			localStorage.setItem('Total_Expenses', JSON.stringify(Total_Expenses));
+			Total_Food.splice(index, 1);
+			localStorage.setItem('Total_Food', JSON.stringify(Total_Food));
+		} else if (target.parentElement.previousSibling.previousSibling.previousSibling.previousSibling.previousSibling.previousSibling.innerText  === 'Goods'){
+			Expenses.splice(index, 1); 
+			localStorage.setItem('Expenses', JSON.stringify(Expenses));
+			Total_Expenses.splice(index, 1);
+			localStorage.setItem('Total_Expenses', JSON.stringify(Total_Expenses));
+			Total_Goods.splice(index, 1);
+			localStorage.setItem('Total_Goods', JSON.stringify(Total_Goods));
+		} else if (target.parentElement.previousSibling.previousSibling.previousSibling.previousSibling.previousSibling.previousSibling.innerText  === 'Services'){
+			Expenses.splice(index, 1); 
+			localStorage.setItem('Expenses', JSON.stringify(Expenses));
+			Total_Expenses.splice(index, 1);
+			localStorage.setItem('Total_Expenses', JSON.stringify(Total_Expenses));
+			Total_Services.splice(index, 1);
+			localStorage.setItem('Total_Services', JSON.stringify(Total_Services));
+		} 
+			//Total Expenses
+			let sumTotal_Expenses = 0;
+			for(var i =0; i<Total_Expenses.length; i++){
+				sumTotal_Expenses += Number(Total_Expenses[i]);	 
+			}
+			document.getElementById('Total_Grand').value = sumTotal_Expenses;
+			//Total Food
+			let sumTotal_Food = 0;
+			for(var i =0; i<Total_Food.length; i++){
+				sumTotal_Food += Number(Total_Food[i]);	 
+			}
+			document.getElementById('Total_F').value = sumTotal_Food;
+			//Total Goods
+			let sumTotal_Goods = 0;
+			for(var i =0; i<Total_Goods.length; i++){
+				sumTotal_Goods += Number(Total_Goods[i]);	 
+			}
+			document.getElementById('Total_G').value = sumTotal_Goods;
+			//Total Services
+			let sumTotal_Services = 0;
+			for(var i =0; i<Total_Services.length; i++){
+				sumTotal_Services += Number(Total_Services[i]);	 
+			}
+			document.getElementById('Total_S').value = sumTotal_Services;	 
+	}
+
+
+	//Get Expenses
 	getExpenses(){
-			let Expenses;
-		if(localStorage.getItem('Expenses') === null){
-			Expenses = [];
-		}	else {
-			Expenses = JSON.parse(localStorage.getItem('Expenses'));
-		}
-
-		//forEach for the stored expenses + totals
+		const Expenses = JSON.parse(localStorage.getItem('Expenses'));
+		if(Expenses !== null){
+			const ui = new UI();
 		Expenses.forEach(function(expense){
-			const ui = new UI;
-			//add expense
-			ui.addExpense(expense);
-			if (expense.type ==='Food'){
-				
-				let Total_Food = JSON.parse(localStorage.getItem('Total_Food'));
-				let sumTFood = 0;
-				for(var i =0; i<Total_Food.length; i++){
-						sumTFood += Number(Total_Food[i]);
-						document.getElementById('Total_F').value = sumTFood;
-					}
-				
-				
-				
-			} else if (expense.type ==='Goods'){
-				let Total_Goods = JSON.parse(localStorage.getItem('Total_Goods'));
-				let sumTGoods = 0;
-					for(var i =0; i<Total_Goods.length; i++){
-						sumTGoods += Number(Total_Goods[i]);
-						document.getElementById('Total_G').value = sumTGoods;
-					}
-				
-			}
-			
-			else if(expense.type ==='Services'){
-				let Total_Services = JSON.parse(localStorage.getItem('Total_Services'));
-				let sumTServices = 0;
-					for(var i =0; i<Total_Services.length; i++){
-						sumTServices += Number(Total_Services[i]);
-						document.getElementById('Total_S').value = sumTServices;
-					}
-				
-			} 
-			
-			let Grand_Total = 0;
-			for(i=0; i<Expenses.length; i++){
-				Grand_Total += Number(expense.value);
-				document.getElementById('Total_Grand').value = Grand_Total;
-			}
-			
-		});	
-	}
-	
-	removeExpense(expense, details, index){
-				let Expenses;
-		if(localStorage.getItem('Expenses') === null){
-			Expenses = [];
-		}	else {
-			Expenses = JSON.parse(localStorage.getItem('Expenses'));
-		}
-
-		if(expense.details === details){
-		Expenses.splice(index, 1); //splice -remove only the current index element;
-		localStorage.setItem('Expenses', JSON.stringify(Expenses));
-		}
-
-
-
-		//testing remove splice totals;
-		let Total_Food =[];
-		let Total_Goods =[];
-		let Total_Services =[];
-		let Grand_Total = 0;
-		let sumTFood = 0;
-		let sumTGoods = 0;
-		let sumTServices = 0;
-
-		Expenses.forEach(function(expense, index){
-			Grand_Total += Number(expense.value);
-			if(expense.details === details){
-					Grand_Total.splice(index, 1);
-					localStorage.setItem("Grand_Total", JSON.stringify(Grand_Total));
-			}
-			
-			
-			if(expense.type === 'Food'){
-					Total_Food.push(expense.value);
-					localStorage.setItem('Total_Food', JSON.stringify(Total_Food));
-					
-					//console.log(Total_Expenses);
-					 
-					for(var i =0; i<Total_Food.length; i++){
-						sumTFood += Number(Total_Food[i]);
-					 
-							Total_Food.splice(index, 1);
-							localStorage.setItem('Total_Food', JSON.stringify(Total_Food));
-						 
-						 
-						
-						
-					}
-					
-				} else if(expense.type === 'Goods'){
-					Total_Goods.push(expense.value); 
-					localStorage.setItem('Total_Goods', JSON.stringify(Total_Goods));
-					
-					
-					for(var i =0; i<Total_Goods.length; i++){
-						sumTGoods += Number(Total_Goods[i]);
-						 
-							Total_Goods.splice(index, 1);
-							localStorage.setItem('Total_Goods', JSON.stringify(Total_Goods)); 
-						 
-						
-					}
-					
-				} else if(expense.type === 'Services'){
-					Total_Services.push(expense.value);
-					localStorage.setItem('Total_Services', JSON.stringify(Total_Services));
-					
-				
-					for(var i =0; i<Total_Services.length; i++){
-						sumTServices += Number(Total_Services[i]);
-						 
-							Total_Services.splice(index, 1);
-							localStorage.setItem('Total_Services', JSON.stringify(Total_Services)); 
-						 
-						
-					}
-					
-				}
+			let row = document.createElement('tr');
+			row.innerHTML = `
+			<td>${expense.type}</td>
+			<td>${expense.value}</td>
+			<td>${expense.details}</td>
+			<td><a href="#" class='delete'>X</a></td>
+			`;
+			let table =  document.querySelector('.table');
+			table.appendChild(row);	
 		});
 
-		location.reload();
-		document.getElementById('Total_Grand').value = Grand_Total;
-		document.getElementById('Total_F').value = sumTFood;
-		document.getElementById('Total_G').value = sumTGoods;
-		document.getElementById('Total_S').value = sumTServices;
-		 
+			//Total Expenses
+			let Total_Expenses = JSON.parse(localStorage.getItem('Total_Expenses'));
+			let sumTotal_Expenses = 0;
+			for(var i =0; i<Total_Expenses.length; i++){
+				sumTotal_Expenses += Number(Total_Expenses[i]);	 
+			}
+			document.getElementById('Total_Grand').value = sumTotal_Expenses;
+
+			//Total Food
+			let Total_Food = JSON.parse(localStorage.getItem('Total_Food'));
+			let sumTotal_Food = 0;
+			for(var i =0; i<Total_Food.length; i++){
+				sumTotal_Food += Number(Total_Food[i]);	 
+			}
+			document.getElementById('Total_F').value = sumTotal_Food;
+
+			//Total Goods
+			let Total_Goods = JSON.parse(localStorage.getItem('Total_Goods'));
+			let sumTotal_Goods = 0;
+			for(var i =0; i<Total_Goods.length; i++){
+				sumTotal_Goods += Number(Total_Goods[i]);	 
+			}
+			document.getElementById('Total_G').value = sumTotal_Goods;
+
+			//Total Services
+			let Total_Services = JSON.parse(localStorage.getItem('Total_Services'));
+			let sumTotal_Services = 0;
+			for(var i =0; i<Total_Services.length; i++){
+				sumTotal_Services += Number(Total_Services[i]);	 
+			}
+			document.getElementById('Total_S').value = sumTotal_Services;
+		}	
 	}
-	
+
 	removeExpenses(){
-		localStorage.clear();
-	}
+		let Expenses = JSON.parse(localStorage.getItem('Expenses'));
+		let Total_Expenses = JSON.parse(localStorage.getItem('Total_Expenses'));
+		let Total_Food = JSON.parse(localStorage.getItem('Total_Food'));
+		let Total_Goods = JSON.parse(localStorage.getItem('Total_Goods'));
+		let Total_Services = JSON.parse(localStorage.getItem('Total_Services'));
+		localStorage.removeItem('Expenses');
+		localStorage.removeItem('Total_Expenses');
+		localStorage.removeItem('Total_Food');
+		localStorage.removeItem('Total_Goods');
+		localStorage.removeItem('Total_Services');
+	} 
 }
 
-//Event Listener for Add Expense;
-document.getElementById('Expense').addEventListener('click', function(e){
-	
-	//define vars
-	const type = document.getElementById('Exp_type').value,
-	      value = parseInt(document.getElementById('Exp_value').value),
-		  details = document.getElementById('Exp_details').value
-	
-	//instantiate expense obj	
-	const expense = new Expense(type, value, details);
-	
-	//instantiate ui obj
-	const ui = new UI();
-	
-	//validate input
-	if(type === '' || value ==='' || details === ''){
-		ui.showAlert('Please fill in an Expense!', 'form-control bg-warning text-center text-dark font-weight-bold'); //// work from here !!!
-	} else {
-	
-	
-	ui.addExpense(expense);
-	//console.log(expense);
-
-	const ls = new LS();
-	ls.storeExpenses(expense);
-
-	ui.clearFields();
-	
-	ui.showAlert('Expense recorded!', 'form-control bg-success text-center text-light font-weight-bold');
-	
-	}
-	
-	 
-	document.querySelector('#hide_Expense').style.display = "block";
-	
-	ui.disableInp();
-	
-	window.setTimeout(ui.enableInp, 3000); 
-	
-	e.preventDefault();
-});
-
-//event listener for Delete Expense (select parent for event delegation)
-document.querySelector('.table').addEventListener('click', function(e){
-	//instantiate UI
-	const ui = new UI();
-
-	//call deleteExpense();
-	ui.deleteExpense(e.target);
-	
-	//instantiate LS
-	const ls = new LS();
-	ls.removeExpense(e.target);
-	
-	//show alert
-	 if(e.target.className === 'delete'){ui.showAlert('Expense removed!', 'form-control bg-warning text-center text-dark font-weight-bold');}
-	 else {
-		 
-	 }
-	
-	ui.disableInp();
-	
-	window.setTimeout(ui.enableInp, 3000); 
-	
-	e.preventDefault();
-});
 
 //DOM Load event listener
 document.addEventListener('DOMContentLoaded', function(){
@@ -380,6 +280,54 @@ document.addEventListener('DOMContentLoaded', function(){
   ls.getExpenses();
 });
 
+//Event Listener for Add Expense;
+document.getElementById('Expense').addEventListener('click', function(e){
+	
+	//vars for expense
+	const type = document.getElementById('Exp_type').value,
+	      value = parseInt(document.getElementById('Exp_value').value),
+		  details = document.getElementById('Exp_details').value
+		  
+	const ui = new UI();
+	
+	const expense = new Expense(type, value, details);
+	
+	//validate input
+	if(type === '' || value ==='' || details === ''){
+		const alertDiv = document.querySelector('.alert');
+		if(alertDiv){
+			alertDiv.remove();
+		}
+		
+		ui.showAlert('Please fill in an Expense!', 'form-control bg-warning text-center text-dark font-weight-bold'); 
+		ui.clearAlert();
+	} else {
+	const alertDiv = document.querySelector('.alert');
+		if(alertDiv){
+			alertDiv.remove();
+		}
+	ui.addExpense(expense);
+	ui.showAlert('Expense recorded!', 'form-control bg-success text-center text-light font-weight-bold');
+	ui.clearAlert();
+	const ls = new LS();
+	ls.storeExpense(expense);
+	}
+
+	e.preventDefault();
+});
+
+//Event Listener for Remove Expense
+document.querySelector('.table').addEventListener('click', function(e){
+	 if(e.target.className === "delete"){
+		const ui = new UI();
+		ui.removeExpense(e.target);
+
+		const ls = new LS();
+		ls.deleteExpense(e.target);
+	 }
+	
+	e.preventDefault();
+});
 
 //Event Listener for hide expenses
 document.querySelector('#Hide_Expenses').addEventListener('click', function(){
@@ -401,29 +349,13 @@ document.querySelector('#Hide_T').addEventListener('click', function(){
     }
 });
 
-//hide expenses and totals
-document.querySelector('#Total').style.display = "none";
-document.querySelector('#hide_Expense').style.display = "none";
-
-
 //event listener for clear expenses
 document.querySelector('#Clear_Expenses').addEventListener('click', function(){
-	 const ui = new UI();
-	 ui.clearExpenses(); 
-	 
-	 const ls = new LS();
-	 ls.removeExpenses();
-
-	 document.getElementById('Total_F').value = '';
-	 document.getElementById('Total_G').value = '';
-	 document.getElementById('Total_S').value = '';
-	 document.getElementById('Total_Grand').value = '';
-	 
-	 ui.showAlert('Expenses Cleared!', 'form-control bg-warning text-center text-dark font-weight-bold'); 
-	 
-	 ui.disableInp();
-	
-	window.setTimeout(ui.enableInp, 3000); 
+	const ui = new UI();
+	ui.clearExpenses(); 
+	const ls = new LS();
+	ls.removeExpenses();
 });
 
- 
+document.querySelector('#Total').style.display = 'none';
+document.querySelector('#hide_Expense').style.display = 'none';
