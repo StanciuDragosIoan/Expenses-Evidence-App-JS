@@ -351,11 +351,13 @@ document.querySelector('#Hide_T').addEventListener('click', function(){
 
 //event listener for clear expenses
 document.querySelector('#Clear_Expenses').addEventListener('click', function(){
-	confirm('Are you sure?');
-	const ui = new UI();
-	ui.clearExpenses(); 
-	const ls = new LS();
-	ls.removeExpenses();
+	var C = confirm('Are you sure?');
+	if(C == true){
+		const ui = new UI();
+		ui.clearExpenses(); 
+		const ls = new LS();
+		ls.removeExpenses();
+	}	
 });
 
 document.querySelector('#Total').style.display = 'none';
