@@ -351,6 +351,7 @@ document.querySelector('#Hide_T').addEventListener('click', function(){
 
 //event listener for clear expenses
 document.querySelector('#Clear_Expenses').addEventListener('click', function(){
+	confirm('Are you sure?');
 	const ui = new UI();
 	ui.clearExpenses(); 
 	const ls = new LS();
